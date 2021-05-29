@@ -103,18 +103,6 @@ public class GUI2 {
 		text2speech.setBounds(207, 234, 169, 23);
 		frmAdvancedtextspeech.getContentPane().add(text2speech);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb1 = (JComboBox)e.getSource();
-				String msg = (String)cb1.getSelectedItem();
-				cmd.createCommand(msg, textArea);
-			}
-		});
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Decodings", "AtbashDecode", "Rot13Decode"}));
-		comboBox_1.setBounds(231, 268, 128, 22);
-		frmAdvancedtextspeech.getContentPane().add(comboBox_1);
-		
 		JComboBox comboBox_2 = new JComboBox();
 		comboBox_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,8 +111,8 @@ public class GUI2 {
 				cmd.createCommand(msg, textArea);
 			}
 		});
-		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Encodings", "AtbashEncode", "Rot13Encode"}));
-		comboBox_2.setBounds(241, 302, 108, 22);
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Encodings", "Atbash Encode/Decode", "Rot13 Encode/Decode"}));
+		comboBox_2.setBounds(238, 268, 108, 22);
 		frmAdvancedtextspeech.getContentPane().add(comboBox_2);
 		
 		

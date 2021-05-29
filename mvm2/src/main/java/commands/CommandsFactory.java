@@ -118,26 +118,9 @@ public class CommandsFactory {
 			System.exit(0);
 			break;
 			
-		case "AtbashDecode":
-			System.out.println("You selected Atbash Decode");
-			if (text.getText() != null){
-				String decoded = Atbashdecrypt(text.getText());
-				text.setText(decoded);
-				break;
-			}else {
-				break;
-			}
 			
-		case "Rot13Decode":
-			System.out.println("You selected Rot13 Decode");
-			if (text.getText() != null){
-				String decoded = Rot13decrypt(text.getText());
-				text.setText(decoded);
-				break;
-			}else {
-				break;
-			}
-		case "AtbashEncode":
+		
+		case "Atbash Encode/Decode":
 			System.out.println("You selected Atbash Encode");
 			if (text.getText() != null){
 				String encoded = Atbashencrypt(text.getText());
@@ -146,7 +129,7 @@ public class CommandsFactory {
 			}else {
 				break;
 			}
-		case "Rot13Encode":
+		case "Rot13 Encode/Decode":
 			System.out.println("You selected Rot13 Encode");
 			if (text.getText() != null){
 				String decoded = Rot13decrypt(text.getText());
@@ -339,7 +322,7 @@ public class CommandsFactory {
 	        try {
 	            voice.setRate(190);// Setting the rate of the voice
 	            voice.setPitch(150);// Setting the Pitch of the voice
-	            voice.setVolume(3);// Setting the volume of the voice
+	            voice.setVolume(2);// Setting the volume of the voice
 	            voice.speak(msg);// Calling speak() method
 
 	        } catch (Exception e1) {
@@ -351,27 +334,6 @@ public class CommandsFactory {
 	    }
 	}
 	
-		
-	public static String Atbashdecrypt(String message)
-    {
-		
-        message = message.toLowerCase();
-        StringBuilder decoded = new StringBuilder();
-        for(char c : message.toCharArray())
-        {
-            if(Character.isLetter(c))
-            {
-                c = (char) ('z' + ('a' - c));
-                decoded.append(c);
-            }
-            else
-            {
-                decoded.append(c);
-            }
-          
-        }
-        return decoded.toString();
-    }
 	
 	
 	private String Rot13decrypt(String text2) {
