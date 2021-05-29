@@ -26,11 +26,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.JButton;
 
 public class GUI2 {
 
 	private JFrame frmAdvancedtextspeech;
-	private JTextField textField1;
 
 	/**
 	 * Launch the application.
@@ -65,14 +66,17 @@ public class GUI2 {
 		frmAdvancedtextspeech.setBounds(100, 100, 654, 525);
 		frmAdvancedtextspeech.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAdvancedtextspeech.getContentPane().setLayout(null);
-		
+
+		final JTextArea textArea = new JTextArea();
+		textArea.setBounds(100, 63, 393, 149);
+		frmAdvancedtextspeech.getContentPane().add(textArea);
 		JComboBox comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
 				String msg = (String)cb.getSelectedItem();
 				
-				cmd.createCommand(msg);			
+				cmd.createCommand(msg,textArea);			
 					
 			}
 		});
@@ -80,10 +84,17 @@ public class GUI2 {
 		comboBox.setBounds(10, 11, 54, 22);
 		frmAdvancedtextspeech.getContentPane().add(comboBox);
 		
-		textField1 = new JTextField();
-		textField1.setBounds(68, 39, 517, 426);
-		frmAdvancedtextspeech.getContentPane().add(textField1);
-		textField1.setColumns(10);
+		JButton text2speech = new JButton("Text2Speech");
+		text2speech.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cmd.text2Speech();
+			}
+		});
+		text2speech.setFont(new Font("Source Sans Pro Black", Font.PLAIN, 13));
+		text2speech.setBounds(207, 234, 169, 23);
+		frmAdvancedtextspeech.getContentPane().add(text2speech);
+
 		
 	}
 }

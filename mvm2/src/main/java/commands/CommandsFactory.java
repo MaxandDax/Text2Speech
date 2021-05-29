@@ -16,24 +16,31 @@ import java.util.TreeMap;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+
+import text2Speech.GUI2;
 
 
 public class CommandsFactory {
 	
 	
+	JTextArea text;
 	
-	
-	public void createCommand(String command) {
-		
+	public void createCommand(String command,JTextArea textArea) {
+		text = textArea;
 		switch (command) {
 		case "File":
 			break;
@@ -59,7 +66,7 @@ public class CommandsFactory {
 				});
 			int result = save.showSaveDialog(null);
 			if (result == JFileChooser.APPROVE_OPTION) {
-				saveXLDocument();
+				//saveXLDocument();
 			}else {
 				System.out.println("Wrong file extension");
 			}
@@ -84,7 +91,7 @@ public class CommandsFactory {
 					System.out.println("Only supports excel and word documents " + extension);
 					break;
 					
-				}else if (extension.equals("docx")) {
+				}else if (extension.equals(".docx")) {
 					
 						openWordDocument(filename);
 						break;
@@ -113,9 +120,25 @@ public class CommandsFactory {
 		
 	}
 	
-	private void openWordDocument(String filename) {
-		// TODO Auto-generated method stub
+	public void openWordDocument(String path) {
 		
+		try {
+            
+            FileInputStream fis = new FileInputStream(new File(path));
+
+            XWPFDocument document = new XWPFDocument(fis);
+
+            List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+
+            for (XWPFParagraph para : paragraphs) {
+            	text.append(para.getText());
+                System.out.println(para.getText());
+            }
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
 	public void openXLDocument(String path) {
@@ -145,14 +168,16 @@ public class CommandsFactory {
 	                    switch (cell.getCellType()) 
 	                    {
 	                        case NUMERIC:
-	                        	
+	                        	text.append(cell.getNumericCellValue() + " ");
 	                            System.out.print(cell.getNumericCellValue() + "\t");
 	                            break;
 	                        case STRING:
+	                        	text.append(cell.getStringCellValue() + " ");
 	                            System.out.print(cell.getStringCellValue() + "\t");
 	                            break;
 	                    }
 	                }
+	                //text.append("");
 	                System.out.println("");
 	            }
 	            file.close();
@@ -165,57 +190,22 @@ public class CommandsFactory {
 		
 	
 	
+	public void saveWordDocument() {
+		
+	}
 	
 	public void saveXLDocument() {
-		 XSSFWorkbook workbook = new XSSFWorkbook(); 
-         
-	        //Create a blank sheet
-	        XSSFSheet sheet = workbook.createSheet("Employee Data");
-	          
-	        //This data needs to be written (Object[])
-	        Map<String, Object[]> data = new TreeMap<String, Object[]>();
-	        data.put("1", new Object[] {"ID", "NAME", "LASTNAME"});
-	        data.put("2", new Object[] {1, "Amit", "Shukla"});
-	        data.put("3", new Object[] {2, "Lokesh", "Gupta"});
-	        data.put("4", new Object[] {3, "John", "Adwards"});
-	        data.put("5", new Object[] {4, "Brian", "Schultz"});
-	          
-	        //Iterate over data and write to sheet
-	        Set<String> keyset = data.keySet();
-	        int rownum = 0;
-	        for (String key : keyset)
-	        {
-	            Row row = sheet.createRow(rownum++);
-	            Object [] objArr = data.get(key);
-	            int cellnum = 0;
-	            for (Object obj : objArr)
-	            {
-	               Cell cell = row.createCell(cellnum++);
-	               if(obj instanceof String)
-	                    cell.setCellValue((String)obj);
-	                else if(obj instanceof Integer)
-	                    cell.setCellValue((Integer)obj);
-	            }
-	        }
-	        try
-	        {
-	            //Write the workbook in file system
-	            FileOutputStream out = new FileOutputStream(new File("howtodoinjava_demo.xlsx"));
-	            workbook.write(out);
-	            out.close();
-	            System.out.println("howtodoinjava_demo.xlsx written successfully on disk.");
-	        } 
-	        catch (Exception e) 
-	        {
-	            e.printStackTrace();
-	        }
-	  }
+		
+	}
+
+	public void text2Speech() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 		
 	
 
 	
-	public void saveWordDocument() {
-		
-	}
 
 }
