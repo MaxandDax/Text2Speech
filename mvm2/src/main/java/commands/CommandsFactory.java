@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -30,6 +31,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -39,6 +41,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+
+import com.sun.speech.freetts.FreeTTS;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 
 import text2Speech.GUI2;
 
@@ -53,11 +59,17 @@ public class CommandsFactory {
 		switch (command) {
 		case "File":
 			break;
-		case "Save":
+		case "SaveXL":
 			//JFileChooser save = new JFileChooser(new File("C:\\"));
-			System.out.println("You selected Save");
-			saveWordDocument();
+			System.out.println("You selected Save file into excel");
 			
+			saveXLDocument();
+			
+			break;
+			
+		case "SaveWord":
+			System.out.println("You selected Save file into word");
+			saveWordDocument();
 			break;
 			
 		case "Open":
@@ -72,6 +84,8 @@ public class CommandsFactory {
 				System.out.println(filename);
 				
 				String extension = filename.substring(filename.lastIndexOf("."),filename.length());
+				
+				text.setText("");
 				
 				if (!extension.equals(".xlsx") & !extension.equals(".docx")) {
 					
@@ -103,10 +117,52 @@ public class CommandsFactory {
 			System.out.println("You selected exit");
 			System.exit(0);
 			break;
+			
+		case "AtbashDecode":
+			System.out.println("You selected Atbash Decode");
+			if (text.getText() != null){
+				String decoded = Atbashdecrypt(text.getText());
+				text.setText(decoded);
+				break;
+			}else {
+				break;
+			}
+			
+		case "Rot13Decode":
+			System.out.println("You selected Rot13 Decode");
+			if (text.getText() != null){
+				String decoded = Rot13decrypt(text.getText());
+				text.setText(decoded);
+				break;
+			}else {
+				break;
+			}
+		case "AtbashEncode":
+			System.out.println("You selected Atbash Encode");
+			if (text.getText() != null){
+				String encoded = Atbashencrypt(text.getText());
+				text.setText(encoded);
+				break;
+			}else {
+				break;
+			}
+		case "Rot13Encode":
+			System.out.println("You selected Rot13 Encode");
+			if (text.getText() != null){
+				String decoded = Rot13decrypt(text.getText());
+				text.setText(decoded);
+				break;
+			}else {
+				break;
+			}
+			
+		
 		}
 		
 	}
 	
+	
+
 	public void openWordDocument(String path) {
 		
 		try {
@@ -207,22 +263,150 @@ public class CommandsFactory {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	      System.out.println("createparagraph.docx written successfully");
-
+	      System.out.println("par.docx written successfully to Desktop");
+	      
 	}
 	
 	public void saveXLDocument() {
-		
+		 XSSFWorkbook workbook = new XSSFWorkbook();
+
+		    //Create a blank sheet
+		    XSSFSheet sheet = workbook.createSheet("New Text");
+
+		    String newText = text.getText();
+		    String[] splitArray = null;
+		    try {
+		        splitArray = newText.split("\\s+");
+		    } catch (PatternSyntaxException ex) {
+		       
+		    }
+		    	
+		    //This data needs to be written (Object[])
+		    Map<String, Object[]> data = new TreeMap<String, Object[]>();
+		    for (int i = 0;i < splitArray.length; i += 2) {
+		    	data.put(Integer.toString(i), new Object[]{splitArray[i],splitArray[i + 1]});
+			    
+		    }
+		    
+
+		    //Iterate over data and write to sheet
+		    Set<String> keyset = data.keySet();
+
+		    int rownum = 0;
+		    for (String key : keyset) 
+		    {
+		        //create a row of excelsheet
+		        Row row = sheet.createRow(rownum++);
+
+		        //get object array of prerticuler key
+		        Object[] objArr = data.get(key);
+
+		        int cellnum = 0;
+
+		        for (Object obj : objArr) 
+		        {
+		            Cell cell = row.createCell(cellnum++);
+		            if (obj instanceof String) 
+		            {
+		                cell.setCellValue((String) obj);
+		            }
+		            else if (obj instanceof Integer) 
+		            {
+		                cell.setCellValue((Integer) obj);
+		            }
+		        }
+		    }
+		    try 
+		    {
+		        //Write the workbook in file system
+		        FileOutputStream out = new FileOutputStream(new File("C:\\Users\\shargath\\Desktop\\par.xlsx"));
+		        workbook.write(out);
+		        out.close();
+		        System.out.println("par.xlsx written successfully on disk.");
+		    } 
+		    catch (Exception e)
+		    {
+		        e.printStackTrace();
+		    }
 	}
 
-	public void text2Speech() {
+	public void text2Speech(String msg) {
+		Voice voice;
+		System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+	    voice = VoiceManager.getInstance().getVoice("kevin16");
+	    if (voice != null) {
+	        voice.allocate();// Allocating Voice
+	        try {
+	            voice.setRate(190);// Setting the rate of the voice
+	            voice.setPitch(150);// Setting the Pitch of the voice
+	            voice.setVolume(3);// Setting the volume of the voice
+	            voice.speak(msg);// Calling speak() method
+
+	        } catch (Exception e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } else {
+	        throw new IllegalStateException("Cannot find voice: kevin16");
+	    }
+	}
+	
+		
+	public static String Atbashdecrypt(String message)
+    {
+		
+        message = message.toLowerCase();
+        StringBuilder decoded = new StringBuilder();
+        for(char c : message.toCharArray())
+        {
+            if(Character.isLetter(c))
+            {
+                c = (char) ('z' + ('a' - c));
+                decoded.append(c);
+            }
+            else
+            {
+                decoded.append(c);
+            }
+          
+        }
+        return decoded.toString();
+    }
+	
+	
+	private String Rot13decrypt(String text2) {
 		// TODO Auto-generated method stub
-		
+		StringBuilder decoded = new StringBuilder();
+        for (int i = 0; i < text2.length(); i++) {
+            char c = text2.charAt(i);
+            if       (c >= 'a' && c <= 'm') c += 13;
+            else if  (c >= 'A' && c <= 'M') c += 13;
+            else if  (c >= 'n' && c <= 'z') c -= 13;
+            else if  (c >= 'N' && c <= 'Z') c -= 13;
+            decoded.append(c);
+        }
+        return decoded.toString();
+	}
+
+	private String Atbashencrypt(String message) {
+		 message = message.toLowerCase();
+	        StringBuilder encoded = new StringBuilder();
+	        for(char c : message.toCharArray())
+	        {
+	            if(Character.isLetter(c))
+	            {
+	                c = (char) ('a' + ('z' - c));
+	                encoded.append(c);
+	            }
+	            else
+	            {
+	                encoded.append(c);
+	            }
+	          
+	        }
+	        return encoded.toString();
 	}
 	
-		
 	
-
 	
-
 }

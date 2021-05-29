@@ -63,7 +63,7 @@ public class GUI2 {
 		final CommandsFactory cmd = new CommandsFactory();
 		frmAdvancedtextspeech = new JFrame();
 		frmAdvancedtextspeech.setTitle("AdvancedText2Speech");
-		frmAdvancedtextspeech.setBounds(100, 100, 654, 525);
+		frmAdvancedtextspeech.setBounds(100, 100, 603, 525);
 		frmAdvancedtextspeech.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAdvancedtextspeech.getContentPane().setLayout(null);
 
@@ -80,20 +80,44 @@ public class GUI2 {
 					
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"File", "Open", "Save", "Close", "Exit"}));
-		comboBox.setBounds(10, 11, 54, 22);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"File", "Open", "SaveXL", "SaveWord", "Close", "Exit"}));
+		comboBox.setBounds(10, 11, 70, 22);
 		frmAdvancedtextspeech.getContentPane().add(comboBox);
 		
 		JButton text2speech = new JButton("Text2Speech");
 		text2speech.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				cmd.text2Speech();
+				cmd.text2Speech(textArea.getText());
 			}
 		});
 		text2speech.setFont(new Font("Source Sans Pro Black", Font.PLAIN, 13));
 		text2speech.setBounds(207, 234, 169, 23);
 		frmAdvancedtextspeech.getContentPane().add(text2speech);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb1 = (JComboBox)e.getSource();
+				String msg = (String)cb1.getSelectedItem();
+				cmd.createCommand(msg, textArea);
+			}
+		});
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Decodings", "AtbashDecode", "Rot13Decode"}));
+		comboBox_1.setBounds(231, 268, 128, 22);
+		frmAdvancedtextspeech.getContentPane().add(comboBox_1);
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb2 = (JComboBox)e.getSource();
+				String msg = (String)cb2.getSelectedItem();
+				cmd.createCommand(msg, textArea);
+			}
+		});
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Encodings", "AtbashEncode", "Rot13Encode"}));
+		comboBox_2.setBounds(241, 302, 108, 22);
+		frmAdvancedtextspeech.getContentPane().add(comboBox_2);
 
 		
 	}
