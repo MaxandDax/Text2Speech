@@ -71,12 +71,8 @@ public class GUI2 {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
 				String msg = (String)cb.getSelectedItem();
-				JFileChooser chooser = new JFileChooser();
-				chooser.showOpenDialog(null);
-				File f = chooser.getSelectedFile();
-				String filename = f.getAbsolutePath();
-				System.out.println(filename);
-				cmd.createCommand(msg, filename);			
+				
+				cmd.createCommand(msg);			
 					
 			}
 		});
@@ -85,7 +81,7 @@ public class GUI2 {
 		frmAdvancedtextspeech.getContentPane().add(comboBox);
 		
 		textField1 = new JTextField();
-		textField1.setBounds(64, 50, 517, 426);
+		textField1.setBounds(68, 39, 517, 426);
 		frmAdvancedtextspeech.getContentPane().add(textField1);
 		textField1.setColumns(10);
 		
