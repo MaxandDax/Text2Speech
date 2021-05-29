@@ -10,6 +10,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.BoxLayout;
 import javax.swing.JTextPane;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 
 import commands.CommandsFactory;
 
@@ -88,7 +90,13 @@ public class GUI2 {
 		text2speech.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				cmd.text2Speech(textArea.getText());
+				String msg = textArea.getSelectedText();
+				if (msg != null) {
+					cmd.text2Speech(msg);
+				}else {
+					cmd.text2Speech(textArea.getText());
+				}
+				
 			}
 		});
 		text2speech.setFont(new Font("Source Sans Pro Black", Font.PLAIN, 13));
@@ -118,7 +126,7 @@ public class GUI2 {
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Encodings", "AtbashEncode", "Rot13Encode"}));
 		comboBox_2.setBounds(241, 302, 108, 22);
 		frmAdvancedtextspeech.getContentPane().add(comboBox_2);
-
+		
 		
 	}
 }
