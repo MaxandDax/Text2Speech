@@ -112,6 +112,7 @@ public class CommandsFactory {
 			
 		case "Close":
 			System.out.println("You selected close");
+			text.setText("");
 			break;
 		case "Exit":
 			System.out.println("You selected exit");
@@ -217,13 +218,14 @@ public class CommandsFactory {
 	
 	
 	public void saveWordDocument() {
+		String userHomeFolder = System.getProperty("user.home");
 		String s = text.getText();
 	      XWPFDocument document = new XWPFDocument(); 
 	      
 	      //Write the Document in file system
 	      FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(new File("C:\\Users\\shargath\\Desktop\\par.docx"));
+			out = new FileOutputStream(new File(userHomeFolder + "\\Desktop\\new.docx"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -246,7 +248,7 @@ public class CommandsFactory {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	      System.out.println("par.docx written successfully to Desktop");
+	      System.out.println("new.docx written successfully to Desktop");
 	      
 	}
 	
@@ -266,10 +268,14 @@ public class CommandsFactory {
 		    	
 		    //This data needs to be written (Object[])
 		    Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		    for (int i = 0;i < splitArray.length; i += 2) {
-		    	data.put(Integer.toString(i), new Object[]{splitArray[i],splitArray[i + 1]});
-			    
+		    
+		    for (int i = 0;i < splitArray.length; i++) {
+		    	
+			    data.put(Integer.toString(i), new Object[]{splitArray[i]});
+				    
 		    }
+		    
+		    
 		    
 
 		    //Iterate over data and write to sheet
@@ -301,11 +307,12 @@ public class CommandsFactory {
 		    }
 		    try 
 		    {
+		    	String userHomeFolder = System.getProperty("user.home");
 		        //Write the workbook in file system
-		        FileOutputStream out = new FileOutputStream(new File("C:\\Users\\shargath\\Desktop\\par.xlsx"));
+		        FileOutputStream out = new FileOutputStream(new File(userHomeFolder + "\\Desktop\\new.xlsx"));
 		        workbook.write(out);
 		        out.close();
-		        System.out.println("par.xlsx written successfully on disk.");
+		        System.out.println("new.xlsx written successfully on Desktop.");
 		    } 
 		    catch (Exception e)
 		    {
