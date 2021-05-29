@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,14 +24,21 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import text2Speech.GUI2;
 
@@ -45,31 +54,9 @@ public class CommandsFactory {
 		case "File":
 			break;
 		case "Save":
-			JFileChooser save = new JFileChooser(new File("C:\\"));
+			//JFileChooser save = new JFileChooser(new File("C:\\"));
 			System.out.println("You selected Save");
-			save.setDialogTitle("Save file");
-			
-			save.setFileFilter(new FileFilter() {
-
-				   public String getDescription() {
-				       return "excel files (*.xlsx)";
-				   }
-
-				   public boolean accept(File f) {
-				       if (f.isDirectory()) {
-				           return true;
-				       } else {
-				           String filename = f.getName().toLowerCase();
-				           return filename.endsWith(".xlsx") || filename.endsWith(".xls") ;
-				       }
-				   }
-				});
-			int result = save.showSaveDialog(null);
-			if (result == JFileChooser.APPROVE_OPTION) {
-				//saveXLDocument();
-			}else {
-				System.out.println("Wrong file extension");
-			}
+			saveWordDocument();
 			
 			break;
 			
@@ -191,7 +178,37 @@ public class CommandsFactory {
 	
 	
 	public void saveWordDocument() {
-		
+		String s = text.getText();
+	      XWPFDocument document = new XWPFDocument(); 
+	      
+	      //Write the Document in file system
+	      FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(new File("C:\\Users\\shargath\\Desktop\\par.docx"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	        
+	      //create Paragraph
+	      XWPFParagraph paragraph = document.createParagraph();
+	      XWPFRun run = paragraph.createRun();
+	      run.setText(s);
+				
+	      try {
+			document.write(out);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      try {
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      System.out.println("createparagraph.docx written successfully");
+
 	}
 	
 	public void saveXLDocument() {
